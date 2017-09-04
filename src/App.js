@@ -4,6 +4,8 @@ import {Route, Link} from 'react-router-dom'
 import PostForm from './PostForm'
 import PostList from './PostList'
 import Category from './Category'
+import PostDetail from './PostDetail'
+import { withRouter } from 'react-router-dom';
 
 import * as Actions from './actions'
 import './App.css';
@@ -11,8 +13,7 @@ import './App.css';
 class App extends Component {
 
   render() {
-    const {posts, categories} = this.props
-    console.log(this.props)
+    const {categories} = this.props
     return (
         <div className="mui-container">
           <Route path='/' exact render={() => (
@@ -34,6 +35,7 @@ class App extends Component {
             <PostForm />
           )} />
           <Route path='/category/:path' component={Category} />
+          <Route path='/post/:path' component={PostDetail} />
         </div>
         );
       }
@@ -52,11 +54,10 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps({appReducer, sortReducer}) {
   return {
-    posts: state.posts,
-    categories: state.categories
+    categories: appReducer.categories
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

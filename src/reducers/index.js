@@ -1,33 +1,82 @@
 import {
   RECEIVE_CATEGORIES,
   RECEIVE_POSTS,
-  SORT_DATE
+  SORT_DATE,
+  SORT_SCORE,
+  RECEIVE_COMMENTS,
+  ADD_POST
   } from '../actions'
+
+import {combineReducers} from 'redux'
 
 const initialState = {
   posts: [],
   categories: [],
-  orderType: 'ASC'
 }
 
-/*
-  sorting of default list of posts regards to voteScore
-*/
-function compareScore(a, b) {
-  let comparisson = 0;
-  if (a.voteScore < b.voteScore) {
-    comparisson = 1
-  } else if (a.voteScore > b.voteScore) {
-    comparisson = -1
+const initialSortState = {
+  sortBy: 'VOTE_SCORE',
+  sortType: 'ASC'
+}
+
+const initialCommentsState = {
+  comments: []
+}
+
+function sorting (state = initialSortState, action) {
+  let {sortBy, sortType} = action
+
+  switch (action.type) {
+    case SORT_DATE:
+      if (sortType == 'ASC') {
+        sortType = 'DESC'
+      } else if(sortType == 'DESC') {
+        sortType = 'ASC'
+      }
+      return {
+        ...state,
+        sortBy: SORT_DATE,
+        sortType: sortType
+      }
+    case SORT_SCORE:
+      if (sortType == 'ASC') {
+        sortType = 'DESC'
+      } else if(sortType == 'DESC') {
+        sortType = 'ASC'
+      }
+      return {
+        ...state,
+        sortBy: SORT_SCORE,
+        sortType: sortType
+      }
+      case RECEIVE_CATEGORIES:
+      return {
+        ...state,
+        sortBy: SORT_SCORE,
+        sortType: 'ASC'
+      }
+    default:
+      return state
+    }
+}
+
+function comments (state = initialCommentsState, action) {
+  switch (action.type) {
+    case RECEIVE_COMMENTS:
+      const {comments} = action
+      return {
+        ...state,
+        comments: comments
+      }
+    default:
+      return state
   }
-  return comparisson
 }
 
 function appReducer (state = initialState, action) {
-  const {posts, sortBy, orderType} = action
+  const {posts} = action
   switch (action.type) {
     case RECEIVE_POSTS:
-      posts.sort(compareScore)
       return {
         ...state,
         posts: posts
@@ -38,14 +87,19 @@ function appReducer (state = initialState, action) {
         ...state,
         categories: categories
       }
-    case SORT_DATE:
+    case ADD_POST:
+      const {post} = action
       return {
         ...state,
-        orderType: orderType
+        [posts]: state.posts.concat([post])
       }
     default:
       return state
   }
 }
 
-export default appReducer
+export default combineReducers({
+  appReducer,
+  sorting,
+  comments
+});

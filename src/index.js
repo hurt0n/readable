@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-// import './styles/prod/css/surface_styles.css';
+import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 import { BrowserRouter } from 'react-router-dom'
 import reducer from './reducers'
@@ -23,10 +23,10 @@ const store = createStore(
 );
 
 ReactDOM.render(
+  <Provider store={store}>
     <BrowserRouter>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </BrowserRouter>, document.getElementById('root'));
+      <App />
+    </BrowserRouter>
+  </Provider>, document.getElementById('root'));
 
 registerServiceWorker();

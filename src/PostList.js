@@ -1,38 +1,40 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {pretifyDate} from './utils/Helper'
 import * as Actions from './actions'
-import { makeGetPostsState } from './selectors/SortSelector'
+import { getSortedPosts } from './selectors/SortSelector'
+import { withRouter } from 'react-router-dom';
 
 class PostList extends Component {
 
-  pretifyDate(timestamp) {
-    const date = new Date(timestamp * 1000)
-    return `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`
+  handleClick(id) {
+    this.props.history.push(`/post/${id}`)
   }
 
   render() {
     let {posts, category} = this.props
-    const {sortPostsByDate, orderType} = this.props
+    const {sortPostsByDate, sortPostsByScore, sorting} = this.props
     if (category != null) {
       posts = posts.filter((post) => (post.category == category))
     }
+    console.log('sorting: ', sorting)
     return (
       <div>
-        <table className='mui-table'>
+        <table className='mui-table post-table'>
           <thead>
             <tr>
               <th>Title</th>
-              <th onClick={() => sortPostsByDate(orderType)}>Timestamp</th>
+              <th><a href="#" onClick={() => sortPostsByDate(sorting.sortType)}>Timestamp</a></th>
               <th>Body</th>
               <th>Author</th>
-              <th>Vote Score</th>
+              <th><a href="#" onClick={() => sortPostsByScore(sorting.sortType)}>Vote Score</a></th>
             </tr>
           </thead>
           <tbody>
             {posts.map((post) => (
-              <tr key={post.id}>
+              <tr key={post.id} onClick={() => this.handleClick(post.id)}>
                 <td>{post.title}</td>
-                <td>{this.pretifyDate(post.timestamp)}</td>
+                <td>{pretifyDate(post.timestamp)}</td>
                 <td>{post.body}</td>
                 <td>{post.author}</td>
                 <td>{post.voteScore}</td>
@@ -46,27 +48,17 @@ class PostList extends Component {
 }
 
 function mapStateToProps(state) {
-
-  console.log(state.orderType)
-  let {posts, sortBy, orderType} =  state
-  if (orderType == 'ASC') {
-    posts = posts.sort((a,b) => {return a.timestamp < b.timestamp})
-    orderType = 'DESC'
-  } else if(orderType == 'DESC') {
-    posts = posts.sort((a,b) => {return a.timestamp > b.timestamp})
-    orderType = 'ASC'
-  }
-    console.log(posts[0])
   return {
-    orderType: orderType,
-    posts: posts
+    sorting: state.sorting,
+    posts: getSortedPosts(state)
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    sortPostsByDate: (data) => dispatch(Actions.sortPostsByDate(data))
+    sortPostsByDate: (data) => dispatch(Actions.sortPostsByDate(data)),
+    sortPostsByScore: (data) => dispatch(Actions.sortPostsByScore(data))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostList)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostList))
