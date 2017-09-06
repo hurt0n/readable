@@ -54,12 +54,12 @@ export const addPost = function(post) {
 
 export const deletePost = postId => dispatch => (
   ReadableAPI.deletePost(postId)
-  .then((res) => dispatch(removePost(res)))
+  .then(() => dispatch(removePost(postId)))
 )
 
-export const removePost = post => ({
+export const removePost = postId => ({
   type: DELETE_POST,
-  post
+  postId
 })
 
 export function sortPostsByDate(sortType) {

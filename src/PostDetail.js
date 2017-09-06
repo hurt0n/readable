@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 
 import {pretifyDate} from './utils/Helper'
 import Comments from './Comments'
@@ -14,8 +15,13 @@ class PostDetail extends Component {
     this.postId = props.match.params.path
   }
 
+  handleDelete = (postId) => {
+    this.props.deletePost(postId)
+    this.props.history.push('/')
+  }
+
   render() {
-    const { post, deletePost } = this.props
+    const { post } = this.props
     return post ? (
       <div>
         <h2 className='mui--text-headline'>Detail of Post</h2>
@@ -63,7 +69,7 @@ class PostDetail extends Component {
             </tr>
           </tbody>
         </table>
-        <span className='mui-btn mui-btn--primary' onClick={() => deletePost(post.id)}>Delete post</span>
+        <span className='mui-btn mui-btn--primary' onClick={() => this.handleDelete(post.id)}>Delete post</span>
         <h2 className='mui--text-headline'>Comments to this post</h2>
         <Comments />
       </div>
@@ -88,4 +94,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostDetail)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostDetail))

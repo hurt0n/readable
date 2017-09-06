@@ -76,6 +76,8 @@ function comments (state = initialCommentsState, action) {
 
 function appReducer (state = initialState, action) {
   const {posts} = action
+  const {post} = action
+  const {postId} = action
 
   switch (action.type) {
     case RECEIVE_POSTS:
@@ -90,7 +92,6 @@ function appReducer (state = initialState, action) {
         categories: categories
       }
     case ADD_POST:
-      const {post} = action
       return {
         ...state,
         posts: state.posts.concat([post])
@@ -99,12 +100,12 @@ function appReducer (state = initialState, action) {
       return {
         ...state,
         posts: state.posts.map((item, index) => {
-          if (item.id !== post.id) {
+          if (item.id !== postId) {
             return item
           }
           return {
             ...item,
-            deleted: post.deleted
+            deleted: true
           }
         })
       }

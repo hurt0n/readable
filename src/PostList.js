@@ -20,7 +20,7 @@ class PostList extends Component {
     console.log('sorting: ', sorting)
     return (
       <div>
-        <table className='mui-table post-table'>
+        <table className='mui-table post-table' >
           <thead>
             <tr>
               <th>Title</th>
@@ -50,7 +50,7 @@ class PostList extends Component {
 function mapStateToProps(state) {
   return {
     sorting: state.sorting,
-    posts: getSortedPosts(state)
+    posts: getSortedPosts(state).filter((item) => (!item.deleted))
   }
 }
 

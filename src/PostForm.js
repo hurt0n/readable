@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import serializeForm from 'form-serialize'
 import {connect} from 'react-redux'
+import {withRouter} from 'react-router-dom'
 
 import * as Actions from './actions'
 
@@ -16,6 +17,7 @@ class PostForm extends Component {
     values['deleted'] = false
     console.log(values)
     this.props.pushPost(values)
+    this.props.history.push('/');
 
   }
 
@@ -45,4 +47,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
- export default connect(state => state,mapDispatchToProps)(PostForm)
+ export default withRouter(connect(state => state,mapDispatchToProps)(PostForm))

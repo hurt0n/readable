@@ -7,7 +7,7 @@ if (!token)
 
 const headers = {
   'Accept': 'application/json',
-  'Authorization': token,
+  'Authorization': 'readable',
   'Content-Type': 'application/json'
 }
 
@@ -37,7 +37,11 @@ export function addPost(post) {
   .then((res) => res.json())
 }
 
-export const deletePost = (postId) =>
-  fetch(`${API_URL}/posts/${postId}`, {
+export function deletePost(id) {
+  return fetch(`${API_URL}/posts/${id}`, {
     method: 'DELETE',
-    headers: headers}).then(res => res)
+    headers: {
+      ...headers
+    }})
+  .then(res => res.text())
+}
