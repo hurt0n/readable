@@ -4,6 +4,7 @@ import {
   SORT_DATE,
   SORT_SCORE,
   RECEIVE_COMMENTS,
+  DELETE_POST,
   ADD_POST
   } from '../actions'
 
@@ -75,6 +76,7 @@ function comments (state = initialCommentsState, action) {
 
 function appReducer (state = initialState, action) {
   const {posts} = action
+
   switch (action.type) {
     case RECEIVE_POSTS:
       return {
@@ -91,7 +93,20 @@ function appReducer (state = initialState, action) {
       const {post} = action
       return {
         ...state,
-        [posts]: state.posts.concat([post])
+        posts: state.posts.concat([post])
+      }
+    case DELETE_POST:
+      return {
+        ...state,
+        posts: state.posts.map((item, index) => {
+          if (item.id !== post.id) {
+            return item
+          }
+          return {
+            ...item,
+            deleted: post.deleted
+          }
+        })
       }
     default:
       return state

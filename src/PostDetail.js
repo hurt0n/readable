@@ -15,7 +15,7 @@ class PostDetail extends Component {
   }
 
   render() {
-    const { post, receiveComments } = this.props
+    const { post, deletePost } = this.props
     return post ? (
       <div>
         <h2 className='mui--text-headline'>Detail of Post</h2>
@@ -63,6 +63,7 @@ class PostDetail extends Component {
             </tr>
           </tbody>
         </table>
+        <span className='mui-btn mui-btn--primary' onClick={() => deletePost(post.id)}>Delete post</span>
         <h2 className='mui--text-headline'>Comments to this post</h2>
         <Comments />
       </div>
@@ -82,7 +83,8 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchComments: (postId) => dispatch(Actions.fetchComments(postId))
+    fetchComments: (postId) => dispatch(Actions.fetchComments(postId)),
+    deletePost: (postId) => dispatch(Actions.deletePost(postId))
   }
 }
 

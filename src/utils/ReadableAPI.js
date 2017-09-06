@@ -30,10 +30,14 @@ export function addPost(post) {
   return fetch(`${API_URL}/posts`, {
     method: 'POST',
     headers: {
-      ...headers,
-      Authorization: 'readable'
+      ...headers
     },
     body: JSON.stringify(post)
   })
   .then((res) => res.json())
 }
+
+export const deletePost = (postId) =>
+  fetch(`${API_URL}/posts/${postId}`, {
+    method: 'DELETE',
+    headers: headers}).then(res => res)

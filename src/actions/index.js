@@ -6,6 +6,7 @@ export const RECEIVE_COMMENTS = 'RECEIVE_COMMENTS'
 export const SORT_DATE = 'DATE'
 export const SORT_SCORE = 'VOTE_SCORE'
 export const ADD_POST = 'ADD_POST'
+export const DELETE_POST = 'DELETE_POST'
 
 export const fetchPosts = () => dispatch => (
   ReadableAPI.fetchAllPosts()
@@ -45,12 +46,21 @@ export const pushPost = (post) => dispatch => (
 )
 
 export const addPost = function(post) {
-  console.log(post)
   return  {
     type: ADD_POST,
     post
   }
 }
+
+export const deletePost = postId => dispatch => (
+  ReadableAPI.deletePost(postId)
+  .then((res) => dispatch(removePost(res)))
+)
+
+export const removePost = post => ({
+  type: DELETE_POST,
+  post
+})
 
 export function sortPostsByDate(sortType) {
   console.log(sortType)

@@ -30,7 +30,7 @@ class PostForm extends Component {
             <input type='text' name='body' placeholder='Body' />
           </div>
           <div className='mui-textfield'>
-            <input type='text' name='owner' placeholder='Author' />
+            <input type='text' name='author' placeholder='Author' />
           </div>
           <button>Add</button>
         </form>
