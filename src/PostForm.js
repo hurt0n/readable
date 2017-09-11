@@ -7,44 +7,65 @@ import * as Actions from './actions'
 
 class PostForm extends Component {
 
+  postId = null
+
+  constructor(props) {
+    super()
+    this.postId = props.match.params.path
+  }
+
   handleSubmit = (e) => {
     e.preventDefault()
     const values = serializeForm(e.target, {hash: true})
     values['timestamp'] = Date.now()
-    values['id'] = Date.now()
+    values['id'] = Date.now()+''
     values['category'] = 'React'
     values['voteScore'] = 1
     values['deleted'] = false
-    console.log(values)
     this.props.pushPost(values)
-    this.props.history.push('/');
+    this.props.history.push(`/post/${values.id}`);
 
   }
 
+  handleEdit = (e) => {
+    e.preventDefault()
+    const values = serializeForm(e.target, {hash: true})
+    this.props.editPost({...this.props.post, ...values})
+    this.props.history.push(`/post/${this.props.post.id}`);
+  }
+
   render() {
+    const {post} = this.props
     return (
       <div>
-        <form onSubmit={this.handleSubmit} className='mui-form'>
+        <form onSubmit={post ? this.handleEdit : this.handleSubmit} className='mui-form'>
           <div className='mui-textfield'>
-            <input type='text' name='title' placeholder='Title' />
+            <input type='text' name='title' placeholder='Title' defaultValue={post ? post.title : ''}/>
           </div>
           <div className='mui-textfield'>
-            <input type='text' name='body' placeholder='Body' />
+            <input type='text' name='body' placeholder='Body' defaultValue={post ? post.body : ''} />
           </div>
           <div className='mui-textfield'>
-            <input type='text' name='author' placeholder='Author' />
+            <input type='text' name='author' placeholder='Author' defaultValue={post ? post.author : ''} />
           </div>
-          <button>Add</button>
+          <button>Update</button>
         </form>
       </div>
     )
   }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapStateToProps(state, ownProps) {
   return {
-    pushPost: (post) => dispatch(Actions.pushPost(post))
+    post: state.appReducer.posts.filter(post => post.id == ownProps.match.params.path)[0]
   }
 }
 
- export default withRouter(connect(state => state,mapDispatchToProps)(PostForm))
+function mapDispatchToProps(dispatch) {
+  return {
+    pushPost: (post) => dispatch(Actions.pushPost(post)),
+    editPost: (post) => dispatch(Actions.editPost(post))
+  }
+}
+
+ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostForm))

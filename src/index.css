@@ -24,3 +24,41 @@ body {
 .mui-table {
   border-spacing: 0;
 }
+
+.mui-table td:last-child {
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.comments-table .my-m:hover {
+  background: #f7f7f7;
+}
+.comments-table .my-m .delete {
+  display: none;
+  cursor: pointer;
+  padding: 10px 15px;
+}
+.comments-table .my-m:hover .delete {
+  display: block;
+}
+
+.score {
+  background: #2196F3;
+  display: inline-block;
+  margin: 0 0 0 5px;
+  width: 20px;
+  height: 20px;
+  line-height: 19px;
+  color: white;
+  text-align: center;
+}
+
+.score:hover {
+  opacity: 0.7
+}
+
+.link {
+  color: #2196F3;
+    text-decoration: none;
+    cursor: pointer;
+}

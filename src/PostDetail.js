@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom'
 import {pretifyDate} from './utils/Helper'
 import Comments from './Comments'
 import * as Actions from './actions'
+import Score from './Score'
 
 class PostDetail extends Component {
 
@@ -64,12 +65,13 @@ class PostDetail extends Component {
                 <span className="mui--text-dark-hint mui--text-subhead">Vote score:</span>
               </td>
               <td>
-                <span className="mui--text-dark mui--text-subhead">{post.voteScore}</span>
+                <span className="mui--text-dark mui--text-subhead"><Score postId={post.id} currentScore={post.voteScore} /></span>
               </td>
             </tr>
           </tbody>
         </table>
-        <span className='mui-btn mui-btn--primary' onClick={() => this.handleDelete(post.id)}>Delete post</span>
+        <span className='mui-btn mui-btn--danger' onClick={() => this.handleDelete(post.id)}>Delete post</span>
+        <span className='mui-btn mui-btn--primary' onClick={() => this.props.history.push(`/post-edit/${post.id}`)}>Edit post</span>
         <h2 className='mui--text-headline'>Comments to this post</h2>
         <Comments />
       </div>
@@ -90,7 +92,7 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchComments: (postId) => dispatch(Actions.fetchComments(postId)),
-    deletePost: (postId) => dispatch(Actions.deletePost(postId))
+    deletePost: (postId) => dispatch(Actions.deletePost(postId)),
   }
 }
 

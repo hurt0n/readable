@@ -7,6 +7,20 @@
 
     <link href="//cdn.muicss.com/mui-0.9.22/css/mui.min.css" rel="stylesheet" type="text/css" />
     <script src="//cdn.muicss.com/mui-0.9.22/js/mui.min.js"></script>
+
+    <script>
+      function activateModal() {
+        // initialize modal element
+        var modalEl = document.createElement('div');
+        modalEl.style.width = '400px';
+        modalEl.style.height = '300px';
+        modalEl.style.margin = '100px auto';
+        modalEl.style.backgroundColor = '#fff';
+
+        // show modal
+        mui.overlay('on', modalEl);
+      }
+    </script>
     <!--
       manifest.json provides metadata used when your web app is added to the
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/

@@ -20,18 +20,21 @@ class App extends Component {
             <div className="">
               <h2 className='mui--text-headline'>Posts</h2>
               <PostList />
+              <Link className='mui-btn mui-btn--primary' to={'/post-form'}>Create Post</Link>
               <div>
                 <h2 className='mui--text-headline'>Categories</h2>
                 <div>
                   {categories.map((cat) => (
-                    <Link key={cat.name} to={/category/+cat.path}>{cat.name}</Link>
+                    <Link key={cat.name} className='mui-btn mui-btn--raised' to={/category/+cat.path}>{cat.name}</Link>
                   ))}
                 </div>
-                <Link className='mui-btn mui-btn--primary' to='post-form'>Create Post</Link>
               </div>
             </div>
           )} />
           <Route path='/post-form' render={() => (
+            <PostForm />
+          )} />
+          <Route path='/post-edit/:path' render={() => (
             <PostForm />
           )} />
           <Route path='/category/:path' component={Category} />

@@ -5,6 +5,8 @@ import * as Actions from './actions'
 import { getSortedPosts } from './selectors/SortSelector'
 import { withRouter } from 'react-router-dom';
 
+import Score from './Score'
+
 class PostList extends Component {
 
   handleClick(id) {
@@ -12,7 +14,7 @@ class PostList extends Component {
   }
 
   render() {
-    let {posts, category} = this.props
+    let {posts, category, comments} = this.props
     const {sortPostsByDate, sortPostsByScore, sorting} = this.props
     if (category != null) {
       posts = posts.filter((post) => (post.category == category))
@@ -24,10 +26,11 @@ class PostList extends Component {
           <thead>
             <tr>
               <th>Title</th>
-              <th><a href="#" onClick={() => sortPostsByDate(sorting.sortType)}>Timestamp</a></th>
+              <th><span className='link' onClick={() => sortPostsByDate(sorting.sortType)}>Timestamp</span></th>
               <th>Body</th>
               <th>Author</th>
-              <th><a href="#" onClick={() => sortPostsByScore(sorting.sortType)}>Vote Score</a></th>
+              <th>Comments</th>
+              <th><span className='link'onClick={() => sortPostsByScore(sorting.sortType)}>Vote Score</span></th>
             </tr>
           </thead>
           <tbody>
@@ -36,8 +39,10 @@ class PostList extends Component {
                 <td>{post.title}</td>
                 <td>{pretifyDate(post.timestamp)}</td>
                 <td>{post.body}</td>
+                <td>{comments.filter(item => item.parentId == post.id).length}</td>
                 <td>{post.author}</td>
-                <td>{post.voteScore}</td>
+                {/* <td>{post.voteScore}</td> */}
+                <td><Score postId={post.id} currentScore={post.voteScore} /></td>
               </tr>
             ))}
           </tbody>
@@ -50,7 +55,8 @@ class PostList extends Component {
 function mapStateToProps(state) {
   return {
     sorting: state.sorting,
-    posts: getSortedPosts(state).filter((item) => (!item.deleted))
+    posts: getSortedPosts(state).filter((item) => (!item.deleted)),
+    comments: state.comments.comments
   }
 }
 
