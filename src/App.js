@@ -24,9 +24,10 @@ class App extends Component {
               <div>
                 <h2 className='mui--text-headline'>Categories</h2>
                 <div>
-                  {categories.map((cat) => (
+                  {categories[0] ? (
+                    categories.map((cat) => (
                     <Link key={cat.name} className='mui-btn mui-btn--raised' to={/category/+cat.path}>{cat.name}</Link>
-                  ))}
+                  ))) : (<div>loading</div>)}
                 </div>
               </div>
             </div>
@@ -57,9 +58,9 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-function mapStateToProps({appReducer, sortReducer}) {
+function mapStateToProps({categories}) {
   return {
-    categories: appReducer.categories
+    categories: categories
   }
 }
 

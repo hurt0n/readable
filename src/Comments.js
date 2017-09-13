@@ -5,6 +5,11 @@ import {pretifyDate} from './utils/Helper'
 import CommentForm from './CommentForm'
 import Score from './Score'
 import * as Actions from './actions'
+import { getSortedComments } from './selectors/SortCommentsSelector'
+
+/**
+* @description list of all comments for specific post
+*/
 
 class Comments extends Component {
 
@@ -13,13 +18,14 @@ class Comments extends Component {
   handleClick = (commentId) => {
     this.comment = this.props.comments.filter(comment => comment.id == commentId)[0]
     this.forceUpdate()
-    // window.activateModal()
   }
 
   render() {
-    const {comments, deleteComment} = this.props
+    const {comments, deleteComment, sortCommentsByDate, sortCommentsByScore, sorting} = this.props
     return(
       <div className='comments-table'>
+        <span className='link' onClick={() => sortCommentsByDate(sorting.sortType)}>Sort by date</span>
+        <span className='link' onClick={() => sortCommentsByScore(sorting.sortType)}>Sort by score</span>
         {comments
           .filter((item) => item.deleted != true)
           .map((comment) => (
@@ -48,15 +54,18 @@ class Comments extends Component {
     )}
 }
 
-function mapStateToProps({comments}) {
+function mapStateToProps(state, ownProps) {
   return {
-    comments: comments.comments
+    comments: getSortedComments(state, ownProps),
+    sorting: state.sorting.comments,
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    deleteComment: (commentId) => dispatch(Actions.deleteComment(commentId))
+    deleteComment: (commentId) => dispatch(Actions.deleteComment(commentId)),
+    sortCommentsByDate: (data) => dispatch(Actions.sortCommentsByDate(data)),
+    sortCommentsByScore: (data) => dispatch(Actions.sortCommentsByScore(data))
   }
 }
 

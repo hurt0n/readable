@@ -5,6 +5,10 @@ import {withRouter} from 'react-router-dom'
 
 import * as Actions from './actions'
 
+/**
+* @description form used to create and edit specific post
+*/
+
 class PostForm extends Component {
 
   postId = null
@@ -35,7 +39,7 @@ class PostForm extends Component {
   }
 
   render() {
-    const {post} = this.props
+    const {post, categories} = this.props
     return (
       <div>
         <form onSubmit={post ? this.handleEdit : this.handleSubmit} className='mui-form'>
@@ -48,6 +52,14 @@ class PostForm extends Component {
           <div className='mui-textfield'>
             <input type='text' name='author' placeholder='Author' defaultValue={post ? post.author : ''} />
           </div>
+          <div className="mui-select" >
+            <select name='category' defaultValue={post ? post.category : ''}>
+              {categories.map((category) => (
+                <option value={category.name}>{category.name}</option>
+              ))}
+            </select>
+            <label>Select Example</label>
+          </div>
           <button>Update</button>
         </form>
       </div>
@@ -57,7 +69,8 @@ class PostForm extends Component {
 
 function mapStateToProps(state, ownProps) {
   return {
-    post: state.appReducer.posts.filter(post => post.id == ownProps.match.params.path)[0]
+    post: state.posts.posts.filter(post => post.id == ownProps.match.params.path)[0],
+    categories: state.categories
   }
 }
 

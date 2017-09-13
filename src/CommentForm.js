@@ -5,13 +5,16 @@ import { withRouter } from 'react-router-dom'
 
 import * as Actions from './actions'
 
+/**
+* @description form used to create and update comment for post
+*/
+
 class CommentForm extends Component {
 
   comment = null
 
   constructor(props) {
     super()
-    // props.comment ? props.comment.id : null
     this.comment = props.comment
   }
 
@@ -52,7 +55,7 @@ class CommentForm extends Component {
 
 function mapStateToProps(state, ownProps) {
   return {
-    post: state.appReducer.posts.filter(post => post.id == ownProps.match.params.path)[0]
+    post: state.posts.posts.filter(post => post.id == ownProps.match.params.path)[0]
   }
 }
 

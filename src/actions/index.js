@@ -8,6 +8,8 @@ export const DELETE_COMMENT = 'DELETE_COMMENT'
 export const EDIT_COMMENT = 'EDIT_COMMENT'
 export const ADD_COMMENT = 'ADD_COMMENT'
 export const SORT_DATE = 'DATE'
+export const SORT_COMMENT_DATE = 'SORT_COMMENT_DATE'
+export const SORT_COMMENT_SCORE = 'SORT_COMMENT_SCORE'
 export const SORT_SCORE = 'VOTE_SCORE'
 export const ADD_POST = 'ADD_POST'
 export const DELETE_POST = 'DELETE_POST'
@@ -17,9 +19,14 @@ export const VOTE_COMMENT = 'VOTE_COMMENT'
 
 export const fetchPosts = () => dispatch => {
   ReadableAPI.fetchAllPosts()
-  .then(posts => dispatch(receivePosts(posts)))
-}
+  .then(posts => {
+    dispatch(receivePosts(posts))
+    posts.map(post => {ReadableAPI.fetchComments(post.id)
+    .then(comments => dispatch(receiveComments(comments)))
+    })
+  })
 
+}
 
 export const receivePosts = posts => ({
   type: RECEIVE_POSTS,
@@ -140,9 +147,21 @@ export const voteComment = (vote, commentId) => dispatch => (
   .then(comment => dispatch(scoreComment(comment)))
 )
 
+export function sortCommentsByDate(sortType) {
+  return {
+    type: SORT_COMMENT_DATE,
+    sortType: sortType
+  }
+}
+
+export function sortCommentsByScore(sortType) {
+  return {
+    type: SORT_COMMENT_SCORE,
+    sortType: sortType
+  }
+}
 
 export function sortPostsByDate(sortType) {
-  console.log(sortType)
   return {
     type: SORT_DATE,
     sortBy: SORT_DATE,

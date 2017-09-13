@@ -7,6 +7,10 @@ import { withRouter } from 'react-router-dom';
 
 import Score from './Score'
 
+/**
+* @description list of posts
+*/
+
 class PostList extends Component {
 
   handleClick(id) {
@@ -14,12 +18,11 @@ class PostList extends Component {
   }
 
   render() {
-    let {posts, category, comments} = this.props
+    let {posts, category, fetchComments} = this.props
     const {sortPostsByDate, sortPostsByScore, sorting} = this.props
     if (category != null) {
       posts = posts.filter((post) => (post.category == category))
     }
-    console.log('sorting: ', sorting)
     return (
       <div>
         <table className='mui-table post-table' >
@@ -30,7 +33,7 @@ class PostList extends Component {
               <th>Body</th>
               <th>Author</th>
               <th>Comments</th>
-              <th><span className='link'onClick={() => sortPostsByScore(sorting.sortType)}>Vote Score</span></th>
+              <th><span className='link' onClick={() => sortPostsByScore(sorting.sortType)}>Vote Score</span></th>
             </tr>
           </thead>
           <tbody>
@@ -39,7 +42,7 @@ class PostList extends Component {
                 <td>{post.title}</td>
                 <td>{pretifyDate(post.timestamp)}</td>
                 <td>{post.body}</td>
-                <td>{comments.filter(item => item.parentId == post.id).length}</td>
+                <td>{post.comments ? post.comments.filter(item => item.parentId == post.id).length : '-'}</td>
                 <td>{post.author}</td>
                 {/* <td>{post.voteScore}</td> */}
                 <td><Score postId={post.id} currentScore={post.voteScore} /></td>
@@ -52,18 +55,19 @@ class PostList extends Component {
   }
 }
 
+
 function mapStateToProps(state) {
   return {
     sorting: state.sorting,
-    posts: getSortedPosts(state).filter((item) => (!item.deleted)),
-    comments: state.comments.comments
+    posts: getSortedPosts(state).filter((item) => (!item.deleted))
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     sortPostsByDate: (data) => dispatch(Actions.sortPostsByDate(data)),
-    sortPostsByScore: (data) => dispatch(Actions.sortPostsByScore(data))
+    sortPostsByScore: (data) => dispatch(Actions.sortPostsByScore(data)),
+    fetchComments: (postId) => dispatch(Actions.fetchComments(postId))
   }
 }
 

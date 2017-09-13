@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 
-const getPosts = state => state.appReducer.posts
+const getPosts = state => state.posts.posts
 const getSorting = state => state.sorting
 
 /*

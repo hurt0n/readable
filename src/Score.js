@@ -2,6 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from './actions'
 
+/**
+* @description Helper Component to maintain score with voting functionality
+*/
+
 class Score extends Component {
 
   render() {

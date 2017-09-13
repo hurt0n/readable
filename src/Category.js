@@ -2,6 +2,10 @@ import React, {Component} from 'react'
 import {Link} from 'react-router-dom'
 import PostList from './PostList'
 
+/**
+* @description Page which contains posts from specific category
+*/
+
 class Category extends Component {
 
   render() {
@@ -14,6 +18,6 @@ class Category extends Component {
       </div>
     )
   }
-
 }
- export default Category
+
+export default Category

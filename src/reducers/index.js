@@ -5,6 +5,8 @@ import {
   SORT_SCORE,
   RECEIVE_COMMENTS,
   ADD_COMMENT,
+  SORT_COMMENT_DATE,
+  SORT_COMMENT_SCORE,
   DELETE_COMMENT,
   EDIT_COMMENT,
   DELETE_POST,
@@ -17,40 +19,34 @@ import {
 import {combineReducers} from 'redux'
 
 const initialState = {
-  posts: [],
-  categories: [],
+  posts: []
 }
 
 const initialSortState = {
   sortBy: 'VOTE_SCORE',
-  sortType: 'ASC'
-}
-
-const initialCommentsState = {
-  comments: []
+  sortType: 'ASC',
+  comments: {
+    sortBy: 'VOTE_SCORE',
+    sortType: 'ASC'
+  }
 }
 
 function sorting (state = initialSortState, action) {
   let {sortType} = action
+  if (sortType == 'ASC') {
+    sortType = 'DESC'
+  } else if(sortType == 'DESC') {
+    sortType = 'ASC'
+  }
 
   switch (action.type) {
     case SORT_DATE:
-      if (sortType == 'ASC') {
-        sortType = 'DESC'
-      } else if(sortType == 'DESC') {
-        sortType = 'ASC'
-      }
       return {
         ...state,
         sortBy: SORT_DATE,
         sortType: sortType
       }
     case SORT_SCORE:
-      if (sortType == 'ASC') {
-        sortType = 'DESC'
-      } else if(sortType == 'DESC') {
-        sortType = 'ASC'
-      }
       return {
         ...state,
         sortBy: SORT_SCORE,
@@ -62,61 +58,95 @@ function sorting (state = initialSortState, action) {
         sortBy: SORT_SCORE,
         sortType: 'ASC'
       }
+      case SORT_COMMENT_DATE:
+      return {
+        ...state,
+        comments: {
+          sortBy: SORT_DATE,
+          sortType: sortType
+        }
+      }
+      case SORT_COMMENT_SCORE:
+      return {
+        ...state,
+        comments: {
+          sortBy: SORT_SCORE,
+          sortType: sortType
+        }
+      }
     default:
       return state
     }
 }
 
-function comments (state = initialCommentsState, action) {
-  const {comment, commentId} = action
+function categories (state = [], action) {
+  const {categories} = action
+
   switch (action.type) {
-    case RECEIVE_COMMENTS:
-      const {comments} = action
-      return {
-        ...state,
-        comments: comments
-      }
-    case EDIT_COMMENT:
-      return {
-        ...state,
-        comments: state.comments.map(item => item.id == comment.id ? {...item, ...comment} : item)
-      }
-    case ADD_COMMENT:
-      return {
-        ...state,
-        comments: state.comments.concat([comment])
-      }
-    case DELETE_COMMENT:
-      return {
-        ...state,
-        comments: state.comments.map(item => item.id == commentId ? {...item, deleted: true} : item)
-      }
-    case VOTE_COMMENT:
-      return {
-        ...state,
-        comments: state.comments.map(item => (item.id == comment.id) ? {...item, ...comment} : item)
-      }
+    case RECEIVE_CATEGORIES:
+    return state.concat(categories)
     default:
       return state
   }
 }
 
-function appReducer (state = initialState, action) {
-  const {posts} = action
-  const {post} = action
-  const {postId} = action
+function posts (state = initialState, action) {
+  const {posts, post, postId, comments, commentId, comment} = action
 
   switch (action.type) {
     case RECEIVE_POSTS:
       return {
         ...state,
-        posts: posts
+        posts: posts.map((item) => {
+          return {
+            ...item,
+            comments: []
+          }
+        })
       }
-    case RECEIVE_CATEGORIES:
-      const {categories} = action
+    case RECEIVE_COMMENTS:
       return {
         ...state,
-        categories: categories
+        posts: state.posts.map((item, index) => ({
+          ...item,
+          comments: comments[0] ?
+          (comments[0].parentId == item.id ?
+            comments
+            : item.comments)
+          : item.comments
+        }))
+      }
+    case DELETE_COMMENT:
+      return {
+        ...state,
+        posts: state.posts.map(item => ({
+          ...item,
+          comments: item.comments.map(com => com.id == commentId ? {...com, deleted: true} : com)
+        }))
+      }
+    case ADD_COMMENT:
+      return {
+        ...state,
+        posts: state.posts.map(item => ({
+          ...item,
+          comments: item.comments.concat([comment])
+        }))
+      }
+    case EDIT_COMMENT:
+      return {
+        ...state,
+        posts: state.posts.map(item => ({
+          ...item,
+          comments: item.comments.map(com => com.id == comment.id ? {...com, ...comment} : com)
+        }))
+      }
+    case VOTE_COMMENT:
+      return {
+        ...state,
+        posts: state.posts.map(item => ({
+          ...item,
+          comments: item.comments.map(com => (com.id == comment.id) ? {...com, ...comment} : com)
+        }))
       }
     case ADD_POST:
       return {
@@ -160,7 +190,7 @@ function appReducer (state = initialState, action) {
 }
 
 export default combineReducers({
-  appReducer,
-  sorting,
-  comments
+  posts,
+  categories,
+  sorting
 });

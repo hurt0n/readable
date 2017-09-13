@@ -7,6 +7,10 @@ import Comments from './Comments'
 import * as Actions from './actions'
 import Score from './Score'
 
+/**
+* @description Page contains detailed info about post and its comments
+*/
+
 class PostDetail extends Component {
 
   postId = null
@@ -73,7 +77,7 @@ class PostDetail extends Component {
         <span className='mui-btn mui-btn--danger' onClick={() => this.handleDelete(post.id)}>Delete post</span>
         <span className='mui-btn mui-btn--primary' onClick={() => this.props.history.push(`/post-edit/${post.id}`)}>Edit post</span>
         <h2 className='mui--text-headline'>Comments to this post</h2>
-        <Comments />
+        <Comments postId={post.id} />
       </div>
     ) : <div>Loading</div>
   }
@@ -85,7 +89,7 @@ class PostDetail extends Component {
 
 function mapStateToProps(state, ownProps) {
   return {
-    post: state.appReducer.posts.filter(post => post.id == ownProps.match.params.path)[0]
+    post: state.posts.posts.filter(post => post.id == ownProps.match.params.path)[0]
   }
 }
 
