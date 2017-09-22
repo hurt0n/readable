@@ -14,7 +14,7 @@ import {
   ADD_POST,
   VOTE_POST,
   VOTE_COMMENT
-  } from '../actions'
+} from '../actions/types'
 
 import {combineReducers} from 'redux'
 
@@ -129,7 +129,7 @@ function posts (state = initialState, action) {
         ...state,
         posts: state.posts.map(item => ({
           ...item,
-          comments: item.comments.concat([comment])
+          comments: item.comments ? item.comments.concat([comment]) : new Array(comment)
         }))
       }
     case EDIT_COMMENT:

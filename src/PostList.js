@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {pretifyDate} from './utils/Helper'
-import * as Actions from './actions'
 import { getSortedPosts } from './selectors/SortSelector'
 import { withRouter } from 'react-router-dom';
 
 import Score from './Score'
+import * as CommentActions from './actions/CommentActions'
+import * as SortActions from './actions/SortActions'
 
 /**
 * @description list of posts
@@ -20,9 +21,7 @@ class PostList extends Component {
   render() {
     let {posts, category, fetchComments} = this.props
     const {sortPostsByDate, sortPostsByScore, sorting} = this.props
-    if (category != null) {
-      posts = posts.filter((post) => (post.category == category))
-    }
+    category ? (posts = posts.filter((post) => (post.category == category))) : (null)
     return (
       <div>
         <table className='mui-table post-table' >
@@ -31,8 +30,8 @@ class PostList extends Component {
               <th>Title</th>
               <th><span className='link' onClick={() => sortPostsByDate(sorting.sortType)}>Timestamp</span></th>
               <th>Body</th>
-              <th>Author</th>
               <th>Comments</th>
+              <th>Author</th>
               <th><span className='link' onClick={() => sortPostsByScore(sorting.sortType)}>Vote Score</span></th>
             </tr>
           </thead>
@@ -55,7 +54,6 @@ class PostList extends Component {
   }
 }
 
-
 function mapStateToProps(state) {
   return {
     sorting: state.sorting,
@@ -63,12 +61,4 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    sortPostsByDate: (data) => dispatch(Actions.sortPostsByDate(data)),
-    sortPostsByScore: (data) => dispatch(Actions.sortPostsByScore(data)),
-    fetchComments: (postId) => dispatch(Actions.fetchComments(postId))
-  }
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostList))
+export default withRouter(connect(mapStateToProps, {...SortActions, ...CommentActions})(PostList))

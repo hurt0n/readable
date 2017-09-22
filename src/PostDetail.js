@@ -4,8 +4,9 @@ import { withRouter } from 'react-router-dom'
 
 import {pretifyDate} from './utils/Helper'
 import Comments from './Comments'
-import * as Actions from './actions'
 import Score from './Score'
+import * as CommentActions from './actions/CommentActions'
+import * as PostActions from './actions/PostActions'
 
 /**
 * @description Page contains detailed info about post and its comments
@@ -27,7 +28,7 @@ class PostDetail extends Component {
 
   render() {
     const { post } = this.props
-    return post ? (
+    return post ? (!post.deleted ?(
       <div>
         <h2 className='mui--text-headline'>Detail of Post</h2>
         <table>
@@ -66,6 +67,14 @@ class PostDetail extends Component {
             </tr>
             <tr>
               <td>
+                <span className="mui--text-dark-hint mui--text-subhead">Category:</span>
+              </td>
+              <td>
+                <span className="mui--text-dark mui--text-subhead">{post.category}</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
                 <span className="mui--text-dark-hint mui--text-subhead">Vote score:</span>
               </td>
               <td>
@@ -79,7 +88,7 @@ class PostDetail extends Component {
         <h2 className='mui--text-headline'>Comments to this post</h2>
         <Comments postId={post.id} />
       </div>
-    ) : <div>Loading</div>
+    ) : <div>Post not found</div>) : <div>Loading</div>
   }
   componentDidMount() {
     this.props.fetchComments(this.postId)
@@ -93,11 +102,4 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    fetchComments: (postId) => dispatch(Actions.fetchComments(postId)),
-    deletePost: (postId) => dispatch(Actions.deletePost(postId)),
-  }
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostDetail))
+export default withRouter(connect(mapStateToProps, {...CommentActions, ...PostActions})(PostDetail))

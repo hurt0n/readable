@@ -7,7 +7,9 @@ import Category from './Category'
 import PostDetail from './PostDetail'
 import { withRouter } from 'react-router-dom';
 
-import * as Actions from './actions'
+import * as CategoryActions from './actions/CategoryActions'
+import * as PostActions from './actions/PostActions'
+import Navigation from './Navigation'
 import './App.css';
 
 class App extends Component {
@@ -16,6 +18,7 @@ class App extends Component {
     const {categories} = this.props
     return (
         <div className="mui-container">
+          <Navigation />
           <Route path='/' exact render={() => (
             <div className="">
               <h2 className='mui--text-headline'>Posts</h2>
@@ -26,8 +29,8 @@ class App extends Component {
                 <div>
                   {categories[0] ? (
                     categories.map((cat) => (
-                    <Link key={cat.name} className='mui-btn mui-btn--raised' to={/category/+cat.path}>{cat.name}</Link>
-                  ))) : (<div>loading</div>)}
+                      <Link key={cat.name} className='mui-btn mui-btn--raised' to={/category/+cat.path}>{cat.name}</Link>
+                    ))) : (<div>loading</div>)}
                 </div>
               </div>
             </div>
@@ -49,19 +52,10 @@ class App extends Component {
     }
 }
 
-
-function mapDispatchToProps(dispatch) {
-  return {
-    fetchPosts: () => dispatch(Actions.fetchPosts()),
-    fetchCategories: () => dispatch(Actions.fetchCategories())
-
-  }
-}
-
 function mapStateToProps({categories}) {
   return {
     categories: categories
   }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default withRouter(connect(mapStateToProps, {...PostActions, ...CategoryActions})(App));

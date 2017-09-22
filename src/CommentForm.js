@@ -3,8 +3,7 @@ import {connect} from 'react-redux'
 import serializeForm from 'form-serialize'
 import { withRouter } from 'react-router-dom'
 
-import * as Actions from './actions'
-
+import * as CommentActions from './actions/CommentActions'
 /**
 * @description form used to create and update comment for post
 */
@@ -59,11 +58,4 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    addComment: (comment) => dispatch(Actions.addComment(comment)),
-    editComment: (comment) => dispatch(Actions.editComment(comment))
-  }
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CommentForm))
+export default withRouter(connect(mapStateToProps, {...CommentActions})(CommentForm))

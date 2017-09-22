@@ -4,8 +4,10 @@ import {connect} from 'react-redux'
 import {pretifyDate} from './utils/Helper'
 import CommentForm from './CommentForm'
 import Score from './Score'
-import * as Actions from './actions'
 import { getSortedComments } from './selectors/SortCommentsSelector'
+
+import * as CommentActions from './actions/CommentActions'
+import * as SortActions from './actions/SortActions'
 
 /**
 * @description list of all comments for specific post
@@ -21,7 +23,9 @@ class Comments extends Component {
   }
 
   render() {
-    const {comments, deleteComment, sortCommentsByDate, sortCommentsByScore, sorting} = this.props
+    const {comments,  sorting} = this.props
+    const {sortCommentsByDate, sortCommentsByScore} = this.props
+    const {deleteComment} = this.props
     return(
       <div className='comments-table'>
         <span className='link' onClick={() => sortCommentsByDate(sorting.sortType)}>Sort by date</span>
@@ -61,12 +65,4 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    deleteComment: (commentId) => dispatch(Actions.deleteComment(commentId)),
-    sortCommentsByDate: (data) => dispatch(Actions.sortCommentsByDate(data)),
-    sortCommentsByScore: (data) => dispatch(Actions.sortCommentsByScore(data))
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Comments)
+export default connect(mapStateToProps, {...CommentActions, ...SortActions})(Comments)

@@ -3,7 +3,7 @@ import serializeForm from 'form-serialize'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 
-import * as Actions from './actions'
+import * as PostActions from './actions/PostActions'
 
 /**
 * @description form used to create and edit specific post
@@ -23,7 +23,6 @@ class PostForm extends Component {
     const values = serializeForm(e.target, {hash: true})
     values['timestamp'] = Date.now()
     values['id'] = Date.now()+''
-    values['category'] = 'React'
     values['voteScore'] = 1
     values['deleted'] = false
     this.props.pushPost(values)
@@ -42,6 +41,7 @@ class PostForm extends Component {
     const {post, categories} = this.props
     return (
       <div>
+        <h2 className='mui--text-headline'>Create/Edit post</h2>
         <form onSubmit={post ? this.handleEdit : this.handleSubmit} className='mui-form'>
           <div className='mui-textfield'>
             <input type='text' name='title' placeholder='Title' defaultValue={post ? post.title : ''}/>
@@ -55,7 +55,7 @@ class PostForm extends Component {
           <div className="mui-select" >
             <select name='category' defaultValue={post ? post.category : ''}>
               {categories.map((category) => (
-                <option value={category.name}>{category.name}</option>
+                <option key={category.name} value={category.name}>{category.name}</option>
               ))}
             </select>
             <label>Select Example</label>
@@ -74,11 +74,4 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    pushPost: (post) => dispatch(Actions.pushPost(post)),
-    editPost: (post) => dispatch(Actions.editPost(post))
-  }
-}
-
- export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostForm))
+ export default withRouter(connect(mapStateToProps, {...PostActions})(PostForm))

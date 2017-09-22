@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import * as Actions from './actions'
+import * as CommentActions from './actions/CommentActions'
+import * as PostActions from './actions/PostActions'
 
 /**
 * @description Helper Component to maintain score with voting functionality
@@ -33,8 +34,8 @@ class Score extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    votePost: (vote, postId) => dispatch(Actions.votePost(vote, postId)),
-    voteComment: (vote, commentId) => dispatch(Actions.voteComment(vote, commentId))
+    votePost: (vote, postId) => dispatch(PostActions.votePost(vote, postId)),
+    voteComment: (vote, commentId) => dispatch(CommentActions.voteComment(vote, commentId))
   }
 }
 
